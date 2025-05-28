@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Outlet, useNavigate } from "react-router-dom"
-import { LogOut, Menu, X, Trash2, Users, Gamepad2 } from "lucide-react"
+import { LogOut, Menu, X, Users, Gamepad2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
@@ -37,12 +37,6 @@ export default function DashboardLayout() {
     setTimeout(() => {
       navigate('/')
     }, 500)
-  }
-
-  const handleDeleteGame = () => {
-    if (window.confirm("Are you sure you want to delete this game session? All progress will be lost.")) {
-      console.log("Game deleted")
-    }
   }
 
   const toggleMenu = () => {

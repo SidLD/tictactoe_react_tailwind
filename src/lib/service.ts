@@ -22,7 +22,6 @@ export const auth = {
       const token = this.getToken();
       if (token) {
         const decodedData = this.decode(token);
-        //TODO - Add role on schema to determine user type
         return decodedData.role;
       }
       return null;
