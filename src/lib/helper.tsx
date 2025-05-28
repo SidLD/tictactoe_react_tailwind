@@ -1,5 +1,5 @@
 export const jsonDataHeader = () => {
-    return { headers: { "x-access-token": localStorage.getItem('token'), "Content-Type": "application/json" } }
+    return { headers: { "x-access-token": `Bearer ${localStorage.getItem('token')}`, "Content-Type": "application/json" } }
 }
 
 export const formDataHeader = () => {
