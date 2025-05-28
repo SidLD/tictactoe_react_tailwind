@@ -6,7 +6,8 @@ import { Badge } from "@/components/ui/badge"
 import { RotateCcw, Trophy, Users, Loader2, AlertCircle } from 'lucide-react'
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { getGameStatus, resetGame, makeMove } from "@/api/game.api"
+import { getGameStatus, resetGame, makeMove, createGame } from "@/api/game.api"
+import { auth } from "@/lib/service"
 
 type Player = "X" | "O" | null
 type GameStatus = "playing" | "won" | "draw"
@@ -94,6 +95,31 @@ export default function TicTacToeBoard() {
       console.error("Reset error:", error)
     },
   })
+
+  const newGame = useMutation({
+    mutationFn: createGame,
+    onSuccess: ({data}:any) => {
+      auth.storeToken(data.token)
+      toast(`${data.logs[0]}`, {
+        description: "Your tic-tac-toe game is ready to start.",
+      })
+      window.location.reload()
+    },
+    onError: () => {
+      toast('Error', {
+        description: "Failed to create game session. Please try again.",
+      })
+    },
+  })
+
+  const handleNewGame = async () => {
+    const gameInfo = auth.getUserInfo()
+    newGame.mutate({ playerXName: gameInfo.players[0].username.trim(), playerOName: gameInfo.players[1].username.trim() })
+  }
+
+  const handleStop = async () => {
+    auth.clear()
+  }
 
   useEffect(() => {
     if (gameStatusData) {
@@ -225,6 +251,21 @@ export default function TicTacToeBoard() {
                     <Badge className="px-4 py-2 text-lg text-green-800 bg-green-100">
                       {getWinnerName()}
                     </Badge>
+                   <div className="flex justify-center gap-4 mt-6">
+                      <Button
+                        onClick={handleNewGame}
+                        className="px-6 py-2 text-white transition duration-200 bg-green-600 shadow-md hover:bg-green-700 rounded-2xl"
+                      >
+                        🆕 New Game
+                      </Button>
+
+                      <Button
+                        onClick={handleStop}
+                        className="px-6 py-2 text-white transition duration-200 bg-red-600 shadow-md hover:bg-red-700 rounded-2xl"
+                      >
+                        🛑 Stop
+                      </Button>
+                    </div>
                   </motion.div>
                 )}
 
@@ -248,6 +289,21 @@ export default function TicTacToeBoard() {
                     <Badge variant="outline" className="px-4 py-2 text-lg bg-amber-50 text-amber-800 border-amber-200">
                       {"No Winner - It's a Draw!"}
                     </Badge>
+                     <div className="flex justify-center gap-4 mt-6">
+                      <Button
+                        onClick={handleNewGame}
+                        className="px-6 py-2 text-white transition duration-200 bg-green-600 shadow-md hover:bg-green-700 rounded-2xl"
+                      >
+                        🆕 New Game
+                      </Button>
+
+                      <Button
+                        onClick={handleStop}
+                        className="px-6 py-2 text-white transition duration-200 bg-red-600 shadow-md hover:bg-red-700 rounded-2xl"
+                      >
+                        🛑 Stop
+                      </Button>
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>

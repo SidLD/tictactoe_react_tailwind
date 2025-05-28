@@ -61,6 +61,21 @@ export const getGameStatus = (data:any) => {
     });
 };
 
+export const getGameHistory = (data:any) => {
+    return new Promise((resolve, reject) => {
+      axios
+        .get(`${import.meta.env.VITE_SERVER_URI}/game-history`, {
+          ...jsonDataHeader(), params:data
+        })
+        .then((res:any) => {
+          resolve(res);
+        })
+        .catch((err:any) => {
+          reject(err);
+        });
+    });
+};
+
 
 export const resetGame = (data:any) => {
     return new Promise((resolve, reject) => {
